@@ -21,6 +21,14 @@ class SongsterrScraper
     body.css(".chord").collect{ |chord| chord.text }
   end
 
+  def to_json
+    JSON.generate({
+      artist: artist,
+      title: title,
+      chords: chords
+    })
+  end
+
   def load_song(song_id)
     doc = HTTParty.get("http://www.songsterr.com/a/wsa/chords-s#{song_id}")
     @page = Nokogiri::HTML(doc)
@@ -29,31 +37,29 @@ class SongsterrScraper
   end
 
   def search_artists(artist_name)
-    search = HTTParty.get("http://www.songsterr.com/a/ra/songs/byartists.xml?artists=")
+    search = HTTParty.get("http://www.songsterr.com/a/ra/songs/byartists.xml?artists=#{artist_name}")
     xml = Nokogiri::XML(search.body)
-    #what if two artists have same name
-    
-    #{
-    # "Metallica":
-    #    ["Song Title": song_id
-    #    ]
-    #  "Metal Wraiths"
-    #}
-    xml
+    # todo
+
   end
 
   def search_songs(song_name)
     search = HTTParty.get("http://www.songsterr.com/a/ra/songs.xml?pattern=#{song_name}")
     xml = Nokogiri::XML(search.body)
-    #{
-    #  23: 
-    #  {
-    #    'Song Title':
-    #    'Artitst':
-    #  }
-    #  54:
-    #}
-    xml
+    songs = xml.children.children.map do |node|
+      if node.elem? and node.css("chordsPresent").text == 'true'
+        {
+          id: node.attribute('id').value.to_i,
+          title: node.css('title').text,
+          artist: {
+            id: node.css("artist").attribute('id').value.to_i,
+            name: node.css("artist").css("name").text
+          }
+        }
+      end
+    end
+
+    JSON.generate(songs.compact)
   end
 
   private

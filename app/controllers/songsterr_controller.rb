@@ -2,16 +2,19 @@ require 'helpers/songsterr_scraper'
 
 class SongsterrController < ApplicationController
 
-  @scraper = SongsterrScraper.new
+  before do
+    @scraper = SongsterrScraper.new
+    content_type :json
+  end
 
-  get '/search' do |name|
-    @scraper.search_artists(params['artist']) if params['artist']
-    @scraper.search_songs(params['song'])     if params['song']
+  get '/search' do
+    @scraper.search_songs(params['song']) if params['song']
   end
 
   get '/song/:id' do |id|
     begin
       @scraper.load_song(id)
+      @scraper.to_json
     rescue
       "song not found"
     end

@@ -1,5 +1,14 @@
 version: '3'
 services:
+  chordslasher:
+    build: .
+    volumes:
+      - .:/chordslasher
+    ports:
+      - 3000:3000
+    links:
+      - 'db'
+
   db:
     image: mysql
     environment:
@@ -8,13 +17,6 @@ services:
       MYSQL_PASSWORD: 'moby_dick'
       MYSQL_ROOT_PASSWORD: 'moby_dick'
     ports:
-      - 3306:3306
-    volumes:
-      - ./db/data:/var/lib/mysql
+      - 33060:33060
 
-  chordslasher:
-    build: .
-    volumes:
-      - ./app:/chordslasher/app
-    ports:
-      - 3000:3000
+

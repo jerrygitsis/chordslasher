@@ -13,3 +13,5 @@ gem "httparty", "~> 0.17.0"
 gem "rake", "~> 13.0"
 
 gem "activerecord", "~> 6.0"
+
+gem "mysql2", "~> 0.5.2"
