@@ -1,0 +1,20 @@
+version: '3'
+services:
+  db:
+    image: mysql
+    environment:
+      MYSQL_DB: 'chordslasher_db'
+      MYSQL_USER: 'starbuck'
+      MYSQL_PASSWORD: 'moby_dick'
+      MYSQL_ROOT_PASSWORD: 'moby_dick'
+    ports:
+      - 3306:3306
+    volumes:
+      - ./db/data:/var/lib/mysql
+
+  chordslasher:
+    build: .
+    volumes:
+      - ./app:/chordslasher/app
+    ports:
+      - 3000:3000
