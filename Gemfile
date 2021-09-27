@@ -6,7 +6,7 @@ gem "sinatra", "~> 2.0"
 gem "sinatra-contrib", "~> 2.0"
 gem "thin", "~> 1.7"
 
-gem "nokogiri", "~> 1.10"
+gem "nokogiri", "~> 1.12"
 gem "httparty", "~> 0.17.0"
 
 
